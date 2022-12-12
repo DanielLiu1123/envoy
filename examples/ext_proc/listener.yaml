@@ -21,29 +21,15 @@ resources:
               common_http_protocol_options:
                 idle_timeout: 3600s
                 headers_with_underscores_action: ALLOW
-#              http2_protocol_options:
-#                max_concurrent_streams: 100
-#                initial_stream_window_size: 65536
-#                initial_connection_window_size: 1048576
+              http2_protocol_options:
+                max_concurrent_streams: 100
+                initial_stream_window_size: 65536
+                initial_connection_window_size: 1048576
               request_timeout: 600s
               request_headers_timeout: 30s
               always_set_request_id_in_response: true
               strip_any_host_port: true
               http_filters:
-                - name: envoy.filters.http.grpc_json_transcoder
-                  typed_config:
-                    '@type': type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
-                    proto_descriptor: upstream/gen/moego.bin
-                    services:
-                      - moego.api.todo.v1.GreetService
-                    print_options:
-                      add_whitespace: false
-                      always_print_primitive_fields: true
-                      always_print_enums_as_ints: true
-                      preserve_proto_field_names: false
-                    auto_mapping: true
-                    ignore_unknown_query_parameters: true
-                    convert_grpc_status: true
                 - name: envoy.filters.http.ext_proc
                   typed_config:
                     '@type': type.googleapis.com/envoy.extensions.filters.http.ext_proc.v3.ExternalProcessor
@@ -57,6 +43,20 @@ resources:
                       response_body_mode: NONE
                       request_trailer_mode: SKIP
                       response_trailer_mode: SKIP
+                - name: envoy.filters.http.grpc_json_transcoder
+                  typed_config:
+                    '@type': type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
+                    proto_descriptor: upstream/proto.pb
+                    services:
+                      - moego.api.todo.v1.GreetService
+                    print_options:
+                      add_whitespace: false
+                      always_print_primitive_fields: true
+                      always_print_enums_as_ints: true
+                      preserve_proto_field_names: false
+                    auto_mapping: true
+                    ignore_unknown_query_parameters: true
+                    convert_grpc_status: true
                 - name: envoy.filters.http.dynamic_forward_proxy
                   typed_config:
                     '@type': type.googleapis.com/envoy.extensions.filters.http.dynamic_forward_proxy.v3.FilterConfig
@@ -79,7 +79,7 @@ resources:
                             - name: Grey-Version-localhost:8080
                               present_match: true
                         route:
-                          cluster: dynamic_forward_proxy_cluster
+                          cluster: dynamic_forward_proxy_http2_cluster
                           timeout: 0s
                         typed_per_filter_config:
                           envoy.filters.http.dynamic_forward_proxy:

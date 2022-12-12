@@ -3,6 +3,11 @@ resources:
     name: localhost
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: {}
     load_assignment:
       cluster_name: localhost
       endpoints:
@@ -16,6 +21,11 @@ resources:
     name: ext-proc
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: { }
     load_assignment:
       cluster_name: ext-proc
       endpoints:
@@ -26,12 +36,13 @@ resources:
                     address: localhost
                     port_value: 9999
   - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
-    name: dynamic_forward_proxy_cluster
+    name: dynamic_forward_proxy_http2_cluster
     lb_policy: CLUSTER_PROVIDED
     cluster_type:
       name: envoy.clusters.dynamic_forward_proxy
       typed_config:
         '@type': type.googleapis.com/envoy.extensions.clusters.dynamic_forward_proxy.v3.ClusterConfig
+#        allow_coalesced_connections: true
         dns_cache_config:
           name: dynamic_forward_proxy_cache_config
           dns_lookup_family: V4_ONLY

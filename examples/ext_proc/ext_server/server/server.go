@@ -62,11 +62,19 @@ func (s *ExternalProcessingServer) Process(srv v3.ExternalProcessor_ProcessServe
 				retHeaders = append(retHeaders, &corev3.HeaderValueOption{
 					Header: &corev3.HeaderValue{
 						Key:   "grey-version-localhost:8080",
-						Value: "grey-version-localhost-feature-test:8081",
+						Value: "localhost-feature-test:8081",
 					},
 					Append: wrapperspb.Bool(false),
 				})
 			}
+
+			retHeaders = append(retHeaders, &corev3.HeaderValueOption{
+				Header: &corev3.HeaderValue{
+					Key:   "name",
+					Value: "freeman",
+				},
+				Append: wrapperspb.Bool(false),
+			})
 
 			resp = &v3.ProcessingResponse{
 				Response: &v3.ProcessingResponse_RequestHeaders{
