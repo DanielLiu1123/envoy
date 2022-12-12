@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package moego.api.todo.v1;
+
+option go_package = "github.com/example/moego/api/todo/v1;greetServiceV1";
+
+message GreetRequest {
+  string message = 1;
+}
+
+message GreetResponse {
+  string message = 1;
+}
+
+service GreetService {
+  rpc Greet(GreetRequest) returns (GreetResponse);
+}
