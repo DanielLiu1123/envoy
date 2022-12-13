@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package moego.api.todo.v1;
 
-option go_package = "github.com/example/moego/api/todo/v1;greetServiceV1";
+option go_package = "github.com/example/moego/api/todo/v1;greet_service_v1";
 
 message GreetRequest {
   string message = 1;

@@ -5,7 +5,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"net"
-	greetServiceV1 "pb/gen/pb"
+	greet_service_v1 "pb/gen/pb"
 	server2 "pb/native/server"
 )
 
@@ -16,7 +16,7 @@ func main() {
 	}
 
 	server := grpc.NewServer()
-	greetServiceV1.RegisterGreetServiceServer(server, &server2.GreetServer{})
+	greet_service_v1.RegisterGreetServiceServer(server, &server2.GreetServer{})
 
 	reflection.Register(server)
 

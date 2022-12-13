@@ -6,11 +6,11 @@ import (
 )
 
 type GreetServer struct {
-	greetServiceV1.UnimplementedGreetServiceServer
+	greet_service_v1.UnimplementedGreetServiceServer
 }
 
-func (g GreetServer) Greet(_ context.Context, request *greetServiceV1.GreetRequest) (*greetServiceV1.GreetResponse, error) {
-	return &greetServiceV1.GreetResponse{
+func (g GreetServer) Greet(_ context.Context, request *greet_service_v1.GreetRequest) (*greet_service_v1.GreetResponse, error) {
+	return &greet_service_v1.GreetResponse{
 		Message: "8081 " + request.Message,
 	}, nil
 }
