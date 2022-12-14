@@ -45,7 +45,5 @@ layered_runtime:
             listener:
               external_http:
                 connection_limit: 10000
-              external_https:
-                connection_limit: 10000
         overload:
           global_downstream_max_connections: 50000

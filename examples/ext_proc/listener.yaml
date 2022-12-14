@@ -28,6 +28,14 @@ resources:
               request_headers_timeout: 30s
               always_set_request_id_in_response: true
               strip_any_host_port: true
+              access_log:
+                - name: envoy.access_loggers.stream
+                  typed_config:
+                    '@type': type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                    log_format:
+                      text_format_source:
+                        inline_string: |
+                          {"time":"%START_TIME%","id":"%REQ(X-REQUEST-ID)%","client_ip":"%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT%","protocol":"%PROTOCOL%","host":"%REQ(:AUTHORITY)%","method":"%REQ(:METHOD)%","path":"%DYNAMIC_METADATA(envoy.filters.http.lua:scraped_path)%","user_agent":"%REQ(USER-AGENT)%","referer":"%REQ(REFERER)%","bytes_received":"%BYTES_RECEIVED%","upstream":"%UPSTREAM_CLUSTER%","upstream_duration":"%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%","status":"%RESPONSE_CODE%","bytes_sent":"%BYTES_SENT%","flags":"%RESPONSE_FLAGS%","duration":"%DURATION%","req_body":%DYNAMIC_METADATA(envoy.filters.http.lua:req_body)%,"res_body":%DYNAMIC_METADATA(envoy.filters.http.lua:res_body)%,"redirect":"%RESP(LOCATION)%","listener":"external_http"}
               http_filters:
                 - name: envoy.filters.http.grpc_json_transcoder
                   typed_config:
@@ -68,7 +76,7 @@ resources:
               route_config:
                 name: local_route
                 virtual_hosts:
-                  - name: '*'
+                  - name: dummy
                     domains:
                       - '*'
                     routes:
