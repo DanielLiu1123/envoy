@@ -1,6 +1,6 @@
 resources:
   - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
-    name: localhost
+    name: greeter
     type: STRICT_DNS
     lb_policy: ROUND_ROBIN
     typed_extension_protocol_options:
@@ -9,13 +9,13 @@ resources:
         explicit_http_config:
           http2_protocol_options: {}
     load_assignment:
-      cluster_name: localhost
+      cluster_name: greeter
       endpoints:
         - lb_endpoints:
             - endpoint:
                 address:
                   socket_address:
-                    address: localhost
+                    address: 192.168.94.153
                     port_value: 8080
   - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
     name: ext-proc
@@ -33,16 +33,21 @@ resources:
             - endpoint:
                 address:
                   socket_address:
-                    address: localhost
+                    address: 192.168.94.153
                     port_value: 9999
   - '@type': type.googleapis.com/envoy.config.cluster.v3.Cluster
     name: dynamic_forward_proxy_http2_cluster
     lb_policy: CLUSTER_PROVIDED
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        '@type': type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options: {}
     cluster_type:
       name: envoy.clusters.dynamic_forward_proxy
       typed_config:
         '@type': type.googleapis.com/envoy.extensions.clusters.dynamic_forward_proxy.v3.ClusterConfig
-#        allow_coalesced_connections: true
+        allow_insecure_cluster_options: true
         dns_cache_config:
           name: dynamic_forward_proxy_cache_config
           dns_lookup_family: V4_ONLY
